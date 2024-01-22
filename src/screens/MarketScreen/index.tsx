@@ -20,6 +20,7 @@ import {
   selectAllTokenLoading,
 } from '../../redux/slices/allTokenSlice';
 import {navigate} from '../../utils/navigationUtils';
+import CrossIcon from '../../../assets/images/cross.svg';
 
 export const chains = [
   {
@@ -33,6 +34,12 @@ export const chains = [
     name: 'Polygon',
     image:
       'https://s3.coinmarketcap.com/static-gravity/image/b8db9a2ac5004c1685a39728cdf4e100.png',
+  },
+  {
+    id: 'bsc',
+    name: 'BSC',
+    image:
+      'https://s2.coinmarketcap.com/static/img/exchanges/64x64/270.png',
   },
   {
     id: 'avalanche',
@@ -81,6 +88,10 @@ const MarketScreen = () => {
     setSelectedChain(chainId);
   };
 
+  const handleClearSearch = () => {
+    setSearchText('');
+  };
+
   const filteredTokens = useMemo(() => {
     return allTokens?.filter(token => {
       const matchesSearch =
@@ -107,7 +118,7 @@ const MarketScreen = () => {
           alignItems: 'center',
           justifyContent: 'center',
         }}>
-         <Text style={styles.priceText}>Loading...</Text>
+        <Text style={styles.priceText}>Loading...</Text>
       </View>
     );
   }
@@ -121,7 +132,7 @@ const MarketScreen = () => {
           alignItems: 'center',
           justifyContent: 'center',
         }}>
-         <Text style={styles.priceText}>Some Error occured...</Text>
+        <Text style={styles.priceText}>Some Error occured... {isError}</Text>
       </View>
     );
   }
@@ -159,14 +170,24 @@ const MarketScreen = () => {
           <>
             <Text style={styles.tokenText}>ALL TOKENS</Text>
             <View style={styles.searchBarContainer}>
-              <SearchIcon height={18} width={18} />
+              <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
+
+              <SearchIcon height={18} width={18} style={{marginRight: 10}} />
               <TextInput
                 style={styles.searchBar}
                 placeholder="Search for tokens or addresses"
                 value={searchText}
                 onChangeText={handleSearch}
                 placeholderTextColor={colors.placeholderText}
-              />
+                />
+                </View>
+              {searchText.length > 0 && (
+                <TouchableOpacity
+                  onPress={handleClearSearch}
+                  style={styles.cross}>
+                  <CrossIcon height={10.4} width={10.4}/>
+                </TouchableOpacity>
+              )}
             </View>
             <View style={{flexDirection: 'row', marginTop: 18}}>
               <ScrollView
@@ -300,10 +321,10 @@ const styles = StyleSheet.create({
   searchBarContainer: {
     backgroundColor: `${colors.gray}66`,
     borderRadius: 50,
-    width: '100%',
+    // width: '100%',
     height: 40,
     flexDirection: 'row',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 28,
     marginTop: 26,
@@ -379,4 +400,13 @@ const styles = StyleSheet.create({
   allTokenContainer: {
     marginTop: 18,
   },
+  cross: {
+    height: 24,
+    width: 24,
+    backgroundColor: colors.secondary,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 26,
+    marginLeft: '-8%'
+  }
 });

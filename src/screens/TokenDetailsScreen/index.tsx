@@ -264,18 +264,9 @@ const TokenDetailsScreen = () => {
               <Text style={styles.statsNumber}>#1</Text>
             </View>
           </View>
-          <View style={styles.buttonContainer}>
-            <View style={styles.circle}>
-              <BellIcon height={24} width={24} />
-            </View>
-            <View style={styles.button}>
-              <Text style={styles.buttonText}>SELL</Text>
-            </View>
-            <TouchableOpacity
-              style={[styles.button, {backgroundColor: colors.white}]}>
-              <Text style={[styles.buttonText, {color: colors.main}]}>BUY</Text>
-            </TouchableOpacity>
-          </View>
+          <Text style={[styles.contractText, {marginTop: 20}]}>
+            CURRENCY DESCRIPTION
+          </Text>
           <Text style={styles.descriptionText}>
             Bitcoin is a decentralized cryptocurrency. Nodes in the bitcoin
             network verify transactions through cryptography and record them in
@@ -316,6 +307,18 @@ const TokenDetailsScreen = () => {
           </View>
         </View>
       </ScrollView>
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity style={styles.circle}>
+          <BellIcon height={24} width={24} />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button}>
+          <Text style={styles.buttonText}>SELL</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.button, {backgroundColor: colors.white}]}>
+          <Text style={[styles.buttonText, {color: colors.main}]}>BUY</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -442,7 +445,8 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    marginTop: 22,
+    marginTop: 10,
+    marginBottom: 10,
   },
   statsNumber: {
     color: colors.white,
@@ -474,7 +478,7 @@ const styles = StyleSheet.create({
     color: colors.placeholderText,
     fontFamily: 'ProductSans-Regular',
     fontSize: 14,
-    marginTop: 30,
+    marginTop: 18,
   },
   chainContainer: {
     flexDirection: 'row',

@@ -1,0 +1,37 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "assets/fonts/ClashGroteskDisplay-Bold.otf",
+      "sha1": "08204ddab43ee8788e31d62cff804015e1c0e49f"
+    },
+    {
+      "path": "assets/fonts/ClashGroteskDisplay-Extralight.otf",
+      "sha1": "9274e08c251e79d0bfbb80511005cf8c708d4a9e"
+    },
+    {
+      "path": "assets/fonts/ClashGroteskDisplay-Light.otf",
+      "sha1": "7f8119cb080f803a9859d4df49de7be9aaba4556"
+    },
+    {
+      "path": "assets/fonts/ClashGroteskDisplay-Medium.otf",
+      "sha1": "7f4cea0e12168537cd81c7921058923f008175e3"
+    },
+    {
+      "path": "assets/fonts/ClashGroteskDisplay-Regular.otf",
+      "sha1": "4b33d9c61c961be6f145c00ce8abcde2eb531855"
+    },
+    {
+      "path": "assets/fonts/ClashGroteskDisplay-Semibold.otf",
+      "sha1": "f6ce4e529d0ee4f60cd3870bdf24b9689de8363a"
+    },
+    {
+      "path": "assets/fonts/ProductSans-Bold.ttf",
+      "sha1": "8c9b0c5b89b0c34cb16f76df9e7c4b5c0c5ea845"
+    },
+    {
+      "path": "assets/fonts/ProductSans-Regular.ttf",
+      "sha1": "919ac1394124c2febe7d2eab2c3cc6d5039adefe"
+    }
+  ]
+}

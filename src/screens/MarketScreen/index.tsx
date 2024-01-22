@@ -19,6 +19,50 @@ import {
   selectAllTokenError,
   selectAllTokenLoading,
 } from '../../redux/slices/allTokenSlice';
+import {navigate} from '../../utils/navigationUtils';
+
+export const chains = [
+  {
+    id: 'all',
+    name: 'All',
+    image:
+      'https://s3.coinmarketcap.com/static-gravity/image/b8db9a2ac5004c1685a39728cdf4e100.png',
+  },
+  {
+    id: 'polygon',
+    name: 'Polygon',
+    image:
+      'https://s3.coinmarketcap.com/static-gravity/image/b8db9a2ac5004c1685a39728cdf4e100.png',
+  },
+  {
+    id: 'avalanche',
+    name: 'Avalanche',
+    image:
+      'https://s3.coinmarketcap.com/static-gravity/image/dcbda7884cf04dbeb498ba96cd7180a2.jpeg',
+  },
+  {
+    id: 'linea',
+    name: 'Linea',
+    image:
+      'https://s3.coinmarketcap.com/static-gravity/image/203ccaf09aa64c19bc8989db729468a6.jpg',
+  },
+  {
+    id: 'zkevm',
+    name: 'zkEVM',
+    image: 'https://s2.coinmarketcap.com/static/img/coins/64x64/3890.png',
+  },
+  {
+    id: 'fantom',
+    name: 'Fantom',
+    image:
+      'https://s3.coinmarketcap.com/static/img/portraits/62d51d9af192d82df8ff3a83.png',
+  },
+  {
+    id: 'base',
+    name: 'Base',
+    image: 'https://s2.coinmarketcap.com/static/img/coins/64x64/27716.png',
+  },
+];
 
 const MarketScreen = () => {
   const [searchText, setSearchText] = useState('');
@@ -27,48 +71,6 @@ const MarketScreen = () => {
   const allTokens = useSelector(selectAllTokenData);
   const isLoading = useSelector(selectAllTokenLoading);
   const isError = useSelector(selectAllTokenError);
-  const chains = [
-    {
-      id: 'all',
-      name: 'All',
-      image:
-        'https://s3.coinmarketcap.com/static-gravity/image/b8db9a2ac5004c1685a39728cdf4e100.png',
-    },
-    {
-      id: 'polygon',
-      name: 'Polygon',
-      image:
-        'https://s3.coinmarketcap.com/static-gravity/image/b8db9a2ac5004c1685a39728cdf4e100.png',
-    },
-    {
-      id: 'avalanche',
-      name: 'Avalanche',
-      image:
-        'https://s3.coinmarketcap.com/static-gravity/image/dcbda7884cf04dbeb498ba96cd7180a2.jpeg',
-    },
-    {
-      id: 'linea',
-      name: 'Linea',
-      image:
-        'https://s3.coinmarketcap.com/static-gravity/image/203ccaf09aa64c19bc8989db729468a6.jpg',
-    },
-    {
-      id: 'zkevm',
-      name: 'zkEVM',
-      image: 'https://s2.coinmarketcap.com/static/img/coins/64x64/3890.png',
-    },
-    {
-      id: 'fantom',
-      name: 'Fantom',
-      image:
-        'https://s3.coinmarketcap.com/static/img/portraits/62d51d9af192d82df8ff3a83.png',
-    },
-    {
-      id: 'base',
-      name: 'Base',
-      image: 'https://s2.coinmarketcap.com/static/img/coins/64x64/27716.png',
-    },
-  ];
 
   useEffect(() => {
     dispatch(fetchAllTokenRequest());
@@ -115,7 +117,13 @@ const MarketScreen = () => {
             showsVerticalScrollIndicator={false}
             keyExtractor={item => item.coingeckoId}
             renderItem={({item}) => (
-              <TouchableOpacity style={styles.cardContainer}>
+              <TouchableOpacity
+                style={styles.cardContainer}
+                onPress={() =>
+                  navigate('TokenDetailsScreen', {
+                    coingeckoId: item.coingeckoId,
+                  })
+                }>
                 <View style={styles.startContainer}>
                   <Image
                     source={{

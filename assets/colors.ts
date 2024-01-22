@@ -6,5 +6,7 @@ export const colors = {
   placeholderText: '#A9A99F',
   primaryBackground: '#222024',
   green: '#3AD480',
-  red: '#B85A92'
+  red: '#B85A92',
+  redBackground: '#DF5E84',
+  justBlack: '#1B1B1B'
 };

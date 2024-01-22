@@ -98,6 +98,34 @@ const MarketScreen = () => {
     dispatch(fetchAllTokenRequest());
   }, []);
 
+  if (isLoading) {
+    return (
+      <View
+        style={{
+          height: '100%',
+          backgroundColor: colors.main,
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+         <Text style={styles.priceText}>Loading...</Text>
+      </View>
+    );
+  }
+
+  if (isError) {
+    return (
+      <View
+        style={{
+          height: '100%',
+          backgroundColor: colors.main,
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+         <Text style={styles.priceText}>Some Error occured...</Text>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.mainContainer}>
       <StatusBar backgroundColor={colors.main} barStyle={'light-content'} />

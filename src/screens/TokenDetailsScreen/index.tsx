@@ -20,13 +20,14 @@ import {useDispatch, useSelector} from 'react-redux';
 import {
   fetchTokenRequest,
   selectTokenData,
+  selectTokenError,
   selectTokenLoading,
 } from '../../redux/slices/tokenSlice';
 import {goBack} from '../../utils/navigationUtils';
-import {chains} from '../MarketScreen';
 import ChainList from '../../components/ChainList';
 import {formatNumber} from '../../utils/numberUtils';
 import GlobeIcon from '../../../assets/images/globe.svg';
+import LinkIcon from '../../../assets/images/link.svg';
 
 const TokenDetailsScreen = () => {
   const route = useRoute();
@@ -34,6 +35,7 @@ const TokenDetailsScreen = () => {
   const {coingeckoId} = route.params;
   const tokenData = useSelector(selectTokenData);
   const isLoading = useSelector(selectTokenLoading);
+  const isError = useSelector(selectTokenError);
   console.log('is loading data', isLoading);
 
   const [selectedTimeInterval, setSelectedTimeInterval] = useState('24H');
@@ -59,7 +61,31 @@ const TokenDetailsScreen = () => {
   };
 
   if (isLoading) {
-    return <Text>loading...</Text>;
+    return (
+      <View
+        style={{
+          height: '100%',
+          backgroundColor: colors.main,
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+        <Text style={styles.priceText}>Loading...</Text>
+      </View>
+    );
+  }
+
+  if (isError) {
+    return (
+      <View
+        style={{
+          height: '100%',
+          backgroundColor: colors.main,
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+        <Text style={styles.priceText}>Some Error occured...</Text>
+      </View>
+    );
   }
 
   return (
@@ -129,7 +155,8 @@ const TokenDetailsScreen = () => {
           </View>
           <View style={styles.verticalLine} />
           <View style={{alignItems: 'center'}}>
-            <Text style={[styles.lastText, {color: colors.white, marginBottom: 5}]}>
+            <Text
+              style={[styles.lastText, {color: colors.white, marginBottom: 5}]}>
               ${tokenData?.low24}
             </Text>
             <Text style={[styles.lastText, {fontSize: 12}]}>24H Low</Text>
@@ -256,9 +283,15 @@ const TokenDetailsScreen = () => {
             market ideology, bitcoin was invented in 2008 by Satoshi Nakamoto,
             an unknown person.
           </Text>
-          <Text style={[styles.contractText, {marginTop: 24}]}>
-            CONTRACT ADDRESSES
-          </Text>
+          <View
+            style={{flexDirection: 'row', alignItems: 'center', marginTop: 24}}>
+            <Text style={[styles.contractText, {marginRight: 4}]}>
+              CONTRACT ADDRESSES
+            </Text>
+            <TouchableOpacity>
+              <LinkIcon />
+            </TouchableOpacity>
+          </View>
           {tokenData?.contractAddress !== undefined ? (
             <ChainList tokenData={tokenData} />
           ) : null}

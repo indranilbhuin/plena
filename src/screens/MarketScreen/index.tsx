@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {colors} from '../../../assets/colors';
 import SearchIcon from '../../../assets/images/search.svg';
 import {useDispatch, useSelector} from 'react-redux';
@@ -26,7 +26,7 @@ export const chains = [
     id: 'all',
     name: 'All',
     image:
-      'https://s3.coinmarketcap.com/static-gravity/image/b8db9a2ac5004c1685a39728cdf4e100.png',
+      'https://cdn.iconscout.com/icon/free/png-512/free-category-2456577-2036097.png?f=webp&w=256',
   },
   {
     id: 'polygon',
@@ -66,11 +66,33 @@ export const chains = [
 
 const MarketScreen = () => {
   const [searchText, setSearchText] = useState('');
+  const [selectedChain, setSelectedChain] = useState('all');
+  const [type, setType] = useState('market');
   const dispatch = useDispatch();
-  const handleSearch = () => {};
   const allTokens = useSelector(selectAllTokenData);
   const isLoading = useSelector(selectAllTokenLoading);
   const isError = useSelector(selectAllTokenError);
+
+  const handleSearch = text => {
+    setSearchText(text);
+  };
+
+  const handleChainFilter = chainId => {
+    setSelectedChain(chainId);
+  };
+
+  const filteredTokens = useMemo(() => {
+    return allTokens?.filter(token => {
+      const matchesSearch =
+        token.name.toLowerCase().includes(searchText.toLowerCase()) ||
+        token.symbol.toLowerCase().includes(searchText.toLowerCase());
+
+      const matchesChain =
+        selectedChain === 'all' || token.contractAddress[selectedChain];
+
+      return matchesSearch && matchesChain;
+    });
+  }, [allTokens, searchText, selectedChain]);
 
   useEffect(() => {
     dispatch(fetchAllTokenRequest());
@@ -81,81 +103,137 @@ const MarketScreen = () => {
       <StatusBar backgroundColor={colors.main} barStyle={'light-content'} />
       <View style={styles.headerContainer}>
         <View style={styles.drawerSection}>
-          <Text style={[styles.drawerText, {marginRight: 15}]}>MARKET</Text>
-          <Text style={styles.drawerText}>NFT</Text>
+          <TouchableOpacity onPress={() => setType('market')}>
+            <Text
+              style={[
+                styles.drawerText,
+                {marginRight: 15},
+                type === 'market'
+                  ? {color: colors.white}
+                  : {color: `${colors.white}70`},
+              ]}>
+              MARKET
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => setType('nft')}>
+            <Text
+              style={[
+                styles.drawerText,
+                type === 'nft'
+                  ? {color: colors.white}
+                  : {color: `${colors.white}70`},
+              ]}>
+              NFT
+            </Text>
+          </TouchableOpacity>
         </View>
-        <Text style={styles.tokenText}>ALL TOKENS</Text>
-        <View style={styles.searchBarContainer}>
-          <SearchIcon height={18} width={18} />
-          <TextInput
-            style={styles.searchBar}
-            placeholder="Search for tokens or addresses"
-            value={searchText}
-            onChangeText={handleSearch}
-            placeholderTextColor={colors.placeholderText}
-          />
-        </View>
-        <View style={{flexDirection: 'row', marginTop: 18}}>
-          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-            {chains.map(chain => (
-              <TouchableOpacity style={styles.chainContainer} key={chain.id}>
-                <Image
-                  source={{
-                    uri: chain.image,
-                  }}
-                  style={styles.chainImage}
-                  resizeMode="cover"
-                />
-                <Text style={styles.chainText}>{chain.name}</Text>
-              </TouchableOpacity>
-            ))}
-          </ScrollView>
-        </View>
-        <View style={styles.allTokenContainer}>
-          <FlatList
-            data={allTokens}
-            showsVerticalScrollIndicator={false}
-            keyExtractor={item => item.coingeckoId}
-            renderItem={({item}) => (
-              <TouchableOpacity
-                style={styles.cardContainer}
-                onPress={() =>
-                  navigate('TokenDetailsScreen', {
-                    coingeckoId: item.coingeckoId,
-                  })
-                }>
-                <View style={styles.startContainer}>
-                  <Image
-                    source={{
-                      uri: item.logoURI,
-                    }}
-                    style={styles.currencyImage}
-                    resizeMode="cover"
-                  />
-                  <View style={styles.firstTextContainer}>
-                    <Text style={styles.currencySymbolText}>{item.symbol}</Text>
-                    <Text style={styles.currencyText}>{item.name}</Text>
-                  </View>
-                </View>
-                <View style={styles.endContainer}>
-                  <Text style={styles.priceText}>${item.price}</Text>
-                  <Text
+        {type === 'market' ? (
+          <>
+            <Text style={styles.tokenText}>ALL TOKENS</Text>
+            <View style={styles.searchBarContainer}>
+              <SearchIcon height={18} width={18} />
+              <TextInput
+                style={styles.searchBar}
+                placeholder="Search for tokens or addresses"
+                value={searchText}
+                onChangeText={handleSearch}
+                placeholderTextColor={colors.placeholderText}
+              />
+            </View>
+            <View style={{flexDirection: 'row', marginTop: 18}}>
+              <ScrollView
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}>
+                {chains.map(chain => (
+                  <TouchableOpacity
                     style={[
-                      styles.priceText,
+                      styles.chainContainer,
                       {
-                        color:
-                          item.priceChange24h < 0 ? colors.red : colors.green,
-                        fontSize: 14,
+                        borderColor:
+                          selectedChain === chain.id
+                            ? colors.white
+                            : 'transparent',
                       },
-                    ]}>
-                    {item.priceChange24h > 0 ? '+' : '-'}
-                    {item.priceChange24h}%
-                  </Text>
-                </View>
-              </TouchableOpacity>
-            )}
-          />
-        </View>
+                    ]}
+                    key={chain.id}
+                    onPress={() => handleChainFilter(chain.id)}>
+                    <Image
+                      source={{
+                        uri: chain.image,
+                      }}
+                      style={styles.chainImage}
+                      resizeMode="cover"
+                    />
+                    <Text style={styles.chainText}>{chain.name}</Text>
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
+            </View>
+            <View style={styles.allTokenContainer}>
+              <FlatList
+                data={filteredTokens}
+                showsVerticalScrollIndicator={false}
+                keyExtractor={item => item.coingeckoId}
+                renderItem={({item}) => (
+                  <TouchableOpacity
+                    style={styles.cardContainer}
+                    onPress={() =>
+                      navigate('TokenDetailsScreen', {
+                        coingeckoId: item.coingeckoId,
+                      })
+                    }>
+                    <View style={styles.startContainer}>
+                      <Image
+                        source={{
+                          uri: item.logoURI,
+                        }}
+                        style={styles.currencyImage}
+                        resizeMode="cover"
+                      />
+                      <View style={styles.firstTextContainer}>
+                        <Text style={styles.currencySymbolText}>
+                          {item.symbol}
+                        </Text>
+                        <Text style={styles.currencyText}>{item.name}</Text>
+                      </View>
+                    </View>
+                    <View style={styles.endContainer}>
+                      <Text style={styles.priceText}>${item.price}</Text>
+                      <Text
+                        style={[
+                          styles.priceText,
+                          {
+                            color:
+                              item.priceChange24h < 0
+                                ? colors.red
+                                : colors.green,
+                            fontSize: 14,
+                          },
+                        ]}>
+                        {item.priceChange24h > 0 ? '+' : '-'}
+                        {item.priceChange24h}%
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                )}
+                initialNumToRender={10}
+                windowSize={5}
+                maxToRenderPerBatch={5}
+                updateCellsBatchingPeriod={50}
+                removeClippedSubviews={true}
+              />
+            </View>
+          </>
+        ) : (
+          <View
+            style={{
+              justifyContent: 'center',
+              height: '100%',
+              alignItems: 'center',
+            }}>
+            <Text>NFT</Text>
+          </View>
+        )}
       </View>
     </View>
   );
@@ -185,9 +263,11 @@ const styles = StyleSheet.create({
     fontFamily: 'ClashGroteskDisplay-Semibold',
     color: colors.white,
     fontSize: 14,
-    textDecorationLine: 'underline',
+    borderBottomWidth: 1,
+    borderBottomColor: colors.white,
     marginTop: 30,
-    includeFontPadding: true,
+    paddingBottom: 5,
+    width: '28%',
   },
   searchBarContainer: {
     backgroundColor: `${colors.gray}66`,
@@ -233,6 +313,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.secondary,
     paddingHorizontal: 12,
     marginRight: 6,
+    borderWidth: 1,
   },
   cardContainer: {
     width: '100%',

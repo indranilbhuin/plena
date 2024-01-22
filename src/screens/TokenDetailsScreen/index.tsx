@@ -64,7 +64,7 @@ const TokenDetailsScreen = () => {
 
   return (
     <View style={styles.mainContainer}>
-      <StatusBar backgroundColor={colors.main} barStyle={'light-content'} />
+      <StatusBar backgroundColor="#24242420" barStyle={'light-content'} />
 
       <View style={styles.headerContainer}>
         <View style={styles.headerStart}>
@@ -96,8 +96,27 @@ const TokenDetailsScreen = () => {
           <Text style={[styles.priceText, {marginTop: 13}]}>
             ${tokenData?.price}
           </Text>
-          <View style={styles.cardContainer}>
-            <Text style={styles.percetText}>-{tokenData?.priceChange24h}%</Text>
+          <View
+            style={[
+              styles.cardContainer,
+              {
+                backgroundColor:
+                  tokenData?.priceChange24h >= 0
+                    ? `${colors.green}33`
+                    : `${colors.redBackground}33`,
+              },
+            ]}>
+            <Text
+              style={[
+                styles.percetText,
+                {
+                  color:
+                    tokenData.priceChange24h >= 0 ? colors.green : colors.red,
+                },
+              ]}>
+              {tokenData.priceChange24h > 0 ? '+' : '-'}
+              {tokenData.priceChange24h}%
+            </Text>
           </View>
         </View>
         <View style={styles.priceGapContainer}>
@@ -110,10 +129,10 @@ const TokenDetailsScreen = () => {
           </View>
           <View style={styles.verticalLine} />
           <View style={{alignItems: 'center'}}>
-            <Text style={[styles.lastText, {color: colors.white}]}>
+            <Text style={[styles.lastText, {color: colors.white, marginBottom: 5}]}>
               ${tokenData?.low24}
             </Text>
-            <Text style={[styles.lastText, {fontSize: 12}]}>24H High</Text>
+            <Text style={[styles.lastText, {fontSize: 12}]}>24H Low</Text>
           </View>
         </View>
         {tokenData.chart !== undefined ? (
@@ -281,6 +300,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingLeft: 15,
     paddingRight: 15,
+    paddingBottom: 10,
+    backgroundColor: '#24242420',
+    paddingTop: 10,
   },
   backContainer: {
     height: 46,
@@ -335,7 +357,7 @@ const styles = StyleSheet.create({
     backgroundColor: `${colors.redBackground}33`,
     justifyContent: 'center',
     alignItems: 'center',
-    width: 60,
+    width: 120,
     marginTop: 10,
   },
   percetText: {

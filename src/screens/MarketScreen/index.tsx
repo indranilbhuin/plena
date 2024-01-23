@@ -38,8 +38,7 @@ export const chains = [
   {
     id: 'bsc',
     name: 'BSC',
-    image:
-      'https://s2.coinmarketcap.com/static/img/exchanges/64x64/270.png',
+    image: 'https://s2.coinmarketcap.com/static/img/exchanges/64x64/270.png',
   },
   {
     id: 'avalanche',
@@ -170,22 +169,26 @@ const MarketScreen = () => {
           <>
             <Text style={styles.tokenText}>ALL TOKENS</Text>
             <View style={styles.searchBarContainer}>
-              <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
-
-              <SearchIcon height={18} width={18} style={{marginRight: 10}} />
-              <TextInput
-                style={styles.searchBar}
-                placeholder="Search for tokens or addresses"
-                value={searchText}
-                onChangeText={handleSearch}
-                placeholderTextColor={colors.placeholderText}
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <SearchIcon height={18} width={18} style={{marginRight: 10}} />
+                <TextInput
+                  style={styles.searchBar}
+                  placeholder="Search for tokens or addresses"
+                  value={searchText}
+                  onChangeText={handleSearch}
+                  placeholderTextColor={colors.placeholderText}
                 />
-                </View>
+              </View>
               {searchText.length > 0 && (
                 <TouchableOpacity
                   onPress={handleClearSearch}
                   style={styles.cross}>
-                  <CrossIcon height={10.4} width={10.4}/>
+                  <CrossIcon height={10.4} width={10.4} />
                 </TouchableOpacity>
               )}
             </View>
@@ -232,13 +235,24 @@ const MarketScreen = () => {
                       })
                     }>
                     <View style={styles.startContainer}>
-                      <Image
-                        source={{
-                          uri: item.logoURI,
-                        }}
-                        style={styles.currencyImage}
-                        resizeMode="cover"
-                      />
+                      <View>
+                        <Image
+                          source={{
+                            uri: item.logoURI,
+                          }}
+                          style={styles.currencyImage}
+                          resizeMode="cover"
+                        />
+                        {selectedChain !== 'all' ? (
+                          <Image
+                            source={{
+                              uri: chains.find(chain => chain.id === selectedChain)?.image,
+                            }}
+                            style={styles.chainIcon}
+                            resizeMode="cover"
+                          />
+                        ) : null}
+                      </View>
                       <View style={styles.firstTextContainer}>
                         <Text style={styles.currencySymbolText}>
                           {item.symbol}
@@ -407,6 +421,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 26,
-    marginLeft: '-8%'
-  }
+    marginLeft: '-8%',
+  },
+  chainIcon: {
+    height: 15,
+    width: 15,
+    borderRadius: 50,
+    position: 'absolute',
+    zIndex: 20,
+    bottom: 0,
+    right: 10,
+  },
 });
